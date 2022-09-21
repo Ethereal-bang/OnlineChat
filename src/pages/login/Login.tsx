@@ -3,6 +3,7 @@ import styles from "./Login.module.scss";
 import {User} from "../../utils/interface";
 import {login} from "../../api/userAxios";
 import {useNavigate} from "react-router-dom";
+import {idSetter} from "../../utils/idStorage";
 
 export const Login = () => {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ export const Login = () => {
         login(val.id, val.password).then(res => {
             if (res.data.flag) {
                 // 储存信息
-                localStorage.setItem("id", String(val.id));
+                idSetter(val.id);
                 // 跳转
                 setTimeout(() => {
                     navigate("/", {
