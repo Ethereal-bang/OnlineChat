@@ -1,4 +1,28 @@
 .profile {
-  width: 250px;
+  width: 300px;
   margin: 0 auto;
+}
+
+.avatar {
+  position: relative;
+  .upload {
+    width: 300px;
+    display: block;
+    // 头像
+    >div:nth-of-type(1) {
+      width: 200px;
+      display: block;
+      margin: 0 auto;
+    }
+    // 上传列表
+    >div:nth-of-type(2) {
+      display: none;
+    }
+  }
+  // icon
+  >img {
+    position: absolute;
+    right: 63px;
+    bottom: 0;
+  }
 }

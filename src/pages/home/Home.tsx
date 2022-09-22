@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import {User} from "../../utils/interface";
-import {Avatar, Button, Input, message} from "antd";
+import {Avatar, Button, Input, message, Upload} from "antd";
 import styles from "./Home.module.scss";
-import {getInfo, modifyProfile} from "../../api/userAxios";
+import {getInfo, modifyProfile, uploadFile} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
+import {RcFile} from "antd/es/upload";
+import modifyIcon from "../../assets/modify.png";
 
 export const Home = () => {
     const [editable, setEditable] = useState<boolean>(false);
@@ -29,8 +31,27 @@ export const Home = () => {
             : message.error(res.msg);
     }
 
+    // upload
+    const upload = (file: RcFile) => {
+        uploadFile(file).then(res => {
+            const data = res.data;
+            if (data.flag) {
+                message.success(data.msg);
+                setAvatar(data.data.path);
+            } else {
+                message.error(data.msg);
+            }
+        })
+        return false;
+    }
+
     return <div className={styles["profile"]}>
-        <Avatar src={avatar} alt={"头像"}/>
+        <div className={styles["avatar"]}>
+            <Upload beforeUpload={upload} className={styles["upload"]}>
+                <Avatar src={avatar} alt={"头像"} size={200} />
+            </Upload>
+            <img src={modifyIcon} alt={"icon"} />
+        </div>
         <Input value={name} disabled={!editable}
                onChange={e => setName(e.currentTarget.value)}
                onBlur={e => modifyNameOrWord(e.currentTarget.value, "name")}
