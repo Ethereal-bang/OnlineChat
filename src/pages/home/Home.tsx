@@ -1,14 +1,22 @@
+import {Avatar, Input} from "antd";
 import {useEffect, useState} from "react";
 import {User} from "../../utils/interface";
-import {Avatar, Button, Input, message, Upload} from "antd";
-import styles from "./Home.module.scss";
-import {getInfo, modifyProfile, uploadFile} from "../../api/userAxios";
+import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
-import {RcFile} from "antd/es/upload";
-import modifyIcon from "../../assets/modify.png";
+import styles from "./Home.module.scss";
+
+const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
+
+    return <section className={styles["person_bar"]}>
+        <Avatar src={props.avatar} shape={"circle"} size={80} />
+        <section>
+            <h2>{props.name}</h2>
+            <p>{props.word}</p>
+        </section>
+    </section>
+}
 
 export const Home = () => {
-    const [editable, setEditable] = useState<boolean>(false);
     const [avatar, setAvatar] = useState<string>("");
     const [name, setName] = useState<string>("Loading");
     const [word, setWord] = useState<string>("");
@@ -23,45 +31,33 @@ export const Home = () => {
         })
     }, [])
 
-    // 修改 昵称/签名
-    const modifyNameOrWord = async (val: string, key: "name" | "word") => {
-        const res = (await modifyProfile(key, val)).data;
-        res.flag
-            ? message.success(res.msg)
-            : message.error(res.msg);
-    }
+    return <section className={styles["home"]}>
+        {/*左边部分*/}
+        <section className={styles["left"]}>
+            <section>
+                <PersonBar avatar={avatar} name={name} word={word} />
+                <Input.Search />
+            </section>
+            {/*联系人列表*/}
+            <section className={styles["list"]}>
 
-    // upload
-    const upload = (file: RcFile) => {
-        uploadFile(file).then(res => {
-            const data = res.data;
-            if (data.flag) {
-                message.success(data.msg);
-                setAvatar(data.data.path);
-            } else {
-                message.error(data.msg);
-            }
-        })
-        return false;
-    }
-
-    return <div className={styles["profile"]}>
-        <div className={styles["avatar"]}>
-            <Upload beforeUpload={upload} className={styles["upload"]}>
-                <Avatar src={avatar} alt={"头像"} size={200} />
-            </Upload>
-            <img src={modifyIcon} alt={"icon"} />
-        </div>
-        <Input value={name} disabled={!editable}
-               onChange={e => setName(e.currentTarget.value)}
-               onBlur={e => modifyNameOrWord(e.currentTarget.value, "name")}
-        />
-        <Input.TextArea value={word} disabled={!editable}
-                        onChange={e => setWord(e.currentTarget.value)}
-                        onBlur={e => modifyNameOrWord(e.currentTarget.value, "word")}
-        />
-        <Button onClick={() => setEditable((val) => !val)}>
-            {editable ? "完成" : "Edit Profile"}
-        </Button>
-    </div>
+            </section>
+        </section>
+        {/*右边部分*/}
+        <section className={styles["right"]}>
+            {/*(待改)对方信息*/}
+            <PersonBar avatar={avatar} name={name} word={word} />
+            {/*聊天记录*/}
+            <div>
+            </div>
+            {/*多功能栏*/}
+            <div className={styles["functional"]}>
+            </div>
+            {/*输入框*/}
+            <Input.TextArea
+                className={styles["input_msg"]}
+                rows={3}
+            />
+        </section>
+    </section>
 }

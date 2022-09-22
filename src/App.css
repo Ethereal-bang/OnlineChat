@@ -1,1 +1,7 @@
 @import '~antd/dist/antd.css';
+
+body {
+    height: 100vh;
+    padding: 59px;
+    background-color: #ffedde;
+}

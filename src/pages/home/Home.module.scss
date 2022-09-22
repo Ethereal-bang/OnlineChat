@@ -1,28 +1,49 @@
-.profile {
-  width: 300px;
-  margin: 0 auto;
+$border: 1px solid black;
+
+.home {
+  display: flex;
+  justify-content: space-between;
 }
 
-.avatar {
-  position: relative;
-  .upload {
-    width: 300px;
-    display: block;
-    // 头像
-    >div:nth-of-type(1) {
-      width: 200px;
-      display: block;
-      margin: 0 auto;
-    }
-    // 上传列表
-    >div:nth-of-type(2) {
-      display: none;
-    }
+.person_bar {
+  display: flex;
+}
+
+.list, .right {
+  background-color: #ffffff;
+}
+
+// 左边部分
+.left {
+  width: 30%;
+  // 左上部分
+  >section:nth-of-type(1) {
+    margin-bottom: 30px;
   }
-  // icon
-  >img {
+  // 联系人列表
+  .list {
+    height: 60vh;
+    overflow-y: scroll;
+    border: $border;
+  }
+}
+
+.right {
+  width: 50%;
+  position: relative;
+  border: $border;
+  .person_bar {
+    border-bottom: $border;
+  }
+  .functional {
+    height: 50px;
     position: absolute;
-    right: 63px;
+    bottom: 75px;
+    border-bottom: $border;
+  }
+  .input_msg {
+    height: 75px;
+    position: absolute;
     bottom: 0;
   }
 }
