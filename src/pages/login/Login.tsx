@@ -8,7 +8,7 @@ import {idSetter} from "../../utils/idStorage";
 export const Login = () => {
     const navigate = useNavigate();
 
-    const submitForm = (val: User) => {
+    const submitForm = (val: Pick<User, "id" | "password">) => {
         login(val.id, val.password).then(res => {
             if (res.data.flag) {
                 // 储存信息

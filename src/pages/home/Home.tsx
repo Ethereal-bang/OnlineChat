@@ -1,6 +1,6 @@
 import {Avatar, Input} from "antd";
 import {useEffect, useState} from "react";
-import {User} from "../../utils/interface";
+import {Contact, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
@@ -20,6 +20,7 @@ export const Home = () => {
     const [avatar, setAvatar] = useState<string>("");
     const [name, setName] = useState<string>("Loading");
     const [word, setWord] = useState<string>("");
+    const [contacts, setContacts] = useState<Contact[]>([]);
 
     // 请求用户信息
     useEffect(() => {
@@ -31,12 +32,21 @@ export const Home = () => {
         })
     }, [])
 
+    // 请求联系人列表
+    useEffect(() => {}, [])
+
+    // 搜索
+    const onSearch = (val: string) => {
+        console.log(val)
+        // getInfo(val)
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
             <section>
                 <PersonBar avatar={avatar} name={name} word={word} />
-                <Input.Search />
+                <Input.Search onSearch={onSearch} />
             </section>
             {/*联系人列表*/}
             <section className={styles["list"]}>
