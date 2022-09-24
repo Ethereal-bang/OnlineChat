@@ -1,9 +1,10 @@
-import {Avatar, Input} from "antd";
-import {useEffect, useState} from "react";
+import {Avatar, Button, Input, message} from "antd";
+import React, {useEffect, useState} from "react";
 import {Contact, User} from "../../utils/interface";
-import {getInfo, searchUser} from "../../api/userAxios";
+import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
+import {applyFriend, searchUser} from "../../api/contactAxios";
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
@@ -50,6 +51,17 @@ export const Home = () => {
         })
     }
 
+    // 发送好友申请
+    const applyFriendClicked = (id: number, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+        applyFriend(id).then(res => {
+            if (res.data.flag) {
+                message.success(res.data.msg)
+                // @ts-ignore
+                e.target.innerText = "已申请"; // 更改按钮文字
+            }
+        })
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -65,6 +77,9 @@ export const Home = () => {
                         <h2>{item.name}</h2>
                         {/*(待补充)最近一条消息*/}
                         <p>{item.word}</p>
+                    </div>
+                    <div>
+                        <Button onClick={(e) => applyFriendClicked(item.id, e)}>添加好友</Button>
                     </div>
                 </div>)}
             </section>

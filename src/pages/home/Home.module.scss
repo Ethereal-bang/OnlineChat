@@ -28,8 +28,9 @@ $border: 1px solid black;
     // 列表项
     >div {
       height: 80px;
-      display: flex;
       padding: 9px;
+      display: flex;
+      justify-content: space-between;
       border-bottom: $border;
     }
   }
