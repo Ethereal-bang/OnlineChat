@@ -1,5 +1,6 @@
 import {myAxios} from "./myAxios";
 import {RcFile} from "antd/es/upload";
+import {idGetter} from "../utils/idStorage";
 
 // 登录
 export const login = (id: number, password: string) => {
@@ -32,4 +33,13 @@ export const uploadFile = (file: RcFile) => {
             "Content-Type": "multipart/form-data",
         }
     });
+}
+
+// 查询
+export const searchUser = (keyword: string) => {
+    return myAxios(`contact/search/${keyword}`, {
+        params: {
+            id: idGetter(),
+        }
+    })
 }

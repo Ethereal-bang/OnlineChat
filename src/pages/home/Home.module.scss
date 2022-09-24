@@ -25,6 +25,13 @@ $border: 1px solid black;
     height: 60vh;
     overflow-y: scroll;
     border: $border;
+    // 列表项
+    >div {
+      height: 80px;
+      display: flex;
+      padding: 9px;
+      border-bottom: $border;
+    }
   }
 }
 

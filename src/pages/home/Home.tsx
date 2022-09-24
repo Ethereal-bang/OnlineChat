@@ -1,7 +1,7 @@
 import {Avatar, Input} from "antd";
 import {useEffect, useState} from "react";
 import {Contact, User} from "../../utils/interface";
-import {getInfo} from "../../api/userAxios";
+import {getInfo, searchUser} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
 
@@ -37,8 +37,17 @@ export const Home = () => {
 
     // 搜索
     const onSearch = (val: string) => {
-        console.log(val)
-        // getInfo(val)
+        searchUser(val).then(res => {
+            const data = res.data.data;
+            // 查询ID
+            if (data.user) {
+                setContacts([data.user]);
+            }
+            // 查询昵称
+            else if (data.list) {
+                setContacts(data.list);
+            }
+        })
     }
 
     return <section className={styles["home"]}>
@@ -50,7 +59,14 @@ export const Home = () => {
             </section>
             {/*联系人列表*/}
             <section className={styles["list"]}>
-
+                {contacts.map(item => <div key={item.id}>
+                    <Avatar size={50} src={item.avatar} />
+                    <div>
+                        <h2>{item.name}</h2>
+                        {/*(待补充)最近一条消息*/}
+                        <p>{item.word}</p>
+                    </div>
+                </div>)}
             </section>
         </section>
         {/*右边部分*/}
