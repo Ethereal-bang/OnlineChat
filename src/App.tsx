@@ -1,15 +1,15 @@
 import React from 'react';
 import './App.css';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {Communicate, Home, Login} from "./pages";
+import {Home, Login} from "./pages";
+import Auth from "./component/auth/Auth";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path={"/"} element={<Home />} />
+                <Route path={"/"} element={<Auth><Home /></Auth>} />
                 <Route path={"/login"} element={<Login />} />
-                <Route path={"/communicate"} element={<Communicate />} />
                 <Route path={"*"} element={<h1>404</h1>} />
             </Routes>
         </BrowserRouter>
