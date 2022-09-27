@@ -4,7 +4,8 @@ import {Contact, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
-import {applyFriend, searchUser} from "../../api/contactAxios";
+import {applyFriend, getApplicationList, searchUser} from "../../api/contactAxios";
+import {contactStateMap} from "../../utils/map";
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
@@ -62,6 +63,12 @@ export const Home = () => {
         })
     }
 
+    // 请求申请列表
+    const getApplicationClicked = async () => {
+        const list: Contact[] = (await getApplicationList()).data.data.list;
+        setContacts(list);
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -79,9 +86,20 @@ export const Home = () => {
                         <p>{item.word}</p>
                     </div>
                     <div>
-                        <Button onClick={(e) => applyFriendClicked(item.id, e)}>添加好友</Button>
+                        <Button
+                            onClick={(e) => applyFriendClicked(item.id, e)}
+                        >
+                            {/*@ts-ignore*/}
+                            {contactStateMap[item.state]}
+                        </Button>
                     </div>
                 </div>)}
+                {/*多功能bar*/}
+                <section>
+                    <i />
+                    <Button>词云</Button>
+                    <Button onClick={getApplicationClicked}>好友申请</Button>
+                </section>
             </section>
         </section>
         {/*右边部分*/}

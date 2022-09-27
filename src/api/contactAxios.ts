@@ -19,3 +19,8 @@ export const applyFriend = (id: number) => {
         }
     })
 }
+
+// 请求申请列表
+export const getApplicationList = () => {
+    return myAxios(`/contact/getAddList/${idGetter()}`);
+}

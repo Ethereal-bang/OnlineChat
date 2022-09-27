@@ -25,6 +25,7 @@ $border: 1px solid black;
     height: 60vh;
     overflow-y: scroll;
     border: $border;
+    position: relative;
     // 列表项
     >div {
       height: 80px;
@@ -32,6 +33,15 @@ $border: 1px solid black;
       display: flex;
       justify-content: space-between;
       border-bottom: $border;
+    }
+    // bar
+    >section {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      button {
+        float: right;
+      }
     }
   }
 }
