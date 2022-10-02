@@ -1,4 +1,4 @@
-import {Avatar, Button, Input, message} from "antd";
+import {Avatar, Button, Input, message, Popconfirm} from "antd";
 import React, {useEffect, useState} from "react";
 import {Contact, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
@@ -53,14 +53,29 @@ export const Home = () => {
     }
 
     // 发送好友申请
-    const applyFriendClicked = (id: number, e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-        applyFriend(id).then(res => {
-            if (res.data.flag) {
-                message.success(res.data.msg)
-                // @ts-ignore
-                e.target.innerText = "已申请"; // 更改按钮文字
-            }
-        })
+    const handleContact = (
+        contact: Contact,
+        flag?: boolean
+    ) => {
+        switch (contact.state) {
+            case 0: // 申请中
+                return message.warn("请勿重复发送好友申请");
+            case -1:    // 未添加
+                applyFriend(contact.uid).then(res => {
+                    if (res.data.flag) {
+                        return message.success(res.data.msg)
+                    }
+                })
+                break;
+            case 4: // 待处理
+                if (flag) { // 同意申请
+
+                } else {    // 拒绝申请
+
+                }
+                break;
+            default:
+        }
     }
 
     // 请求申请列表
@@ -86,12 +101,23 @@ export const Home = () => {
                         <p>{item.word}</p>
                     </div>
                     <div>
-                        <Button
-                            onClick={(e) => applyFriendClicked(item.id, e)}
-                        >
-                            {/*@ts-ignore*/}
-                            {contactStateMap[item.state]}
-                        </Button>
+                        {item.state === 4
+                            ? <Popconfirm
+                                title={"同意或拒绝好友申请"}
+                                okText={"同意"}
+                                cancelText={"拒绝"}
+                                onConfirm={() => handleContact(item, true)}
+                                onCancel={() => handleContact(item, false)}
+                            >
+                                <Button>同意/拒绝</Button>
+                            </Popconfirm>
+                            : <Button
+                                onClick={() => handleContact(item)}
+                            >
+                                {/*@ts-ignore*/}
+                                {contactStateMap[item.state]}
+                            </Button>
+                        }
                     </div>
                 </div>)}
                 {/*多功能bar*/}
