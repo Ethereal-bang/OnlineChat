@@ -24,3 +24,14 @@ export const applyFriend = (id: number) => {
 export const getApplicationList = () => {
     return myAxios(`/contact/getAddList/${idGetter()}`);
 }
+
+// 同意/拒绝好友申请
+export const handleApplication = (contact: number, state: 1 | 2) => {
+    return myAxios("/contact/handleApplication", {
+        params: {
+            id: idGetter(),
+            contact,
+            state,
+        },
+    });
+}

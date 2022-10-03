@@ -4,7 +4,7 @@ import {Contact, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
-import {applyFriend, getApplicationList, searchUser} from "../../api/contactAxios";
+import {applyFriend, getApplicationList, handleApplication, searchUser} from "../../api/contactAxios";
 import {contactStateMap} from "../../utils/map";
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
@@ -53,7 +53,7 @@ export const Home = () => {
     }
 
     // 发送好友申请
-    const handleContact = (
+    const handleContact = async (
         contact: Contact,
         flag?: boolean
     ) => {
@@ -68,11 +68,15 @@ export const Home = () => {
                 })
                 break;
             case 4: // 待处理
-                if (flag) { // 同意申请
-
-                } else {    // 拒绝申请
-
-                }
+                await handleApplication(contact.uid, flag ? 1 : 2);
+                setContacts(contacts => {
+                    const index = contacts.indexOf(contact);
+                    const arr:Contact[] = [...contacts.slice(0, index), {
+                        ...contacts[index],
+                        state: flag ? 1 : 2,
+                    }, ...contacts.slice(index + 1)]
+                    return arr;
+                })
                 break;
             default:
         }
