@@ -4,7 +4,13 @@ import {Contact, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
-import {applyFriend, getApplicationList, handleApplication, searchUser} from "../../api/contactAxios";
+import {
+    applyFriend,
+    getApplicationList,
+    handleApplication,
+    requestContactList,
+    searchUser
+} from "../../api/contactAxios";
 import {contactStateMap} from "../../utils/map";
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
@@ -35,7 +41,12 @@ export const Home = () => {
     }, [])
 
     // 请求联系人列表
-    useEffect(() => {}, [])
+    const getContacts = async () => {
+        setContacts((await requestContactList()).data.data.list);
+    }
+    useEffect(() => {
+        getContacts();
+    }, [])
 
     // 搜索
     const onSearch = (val: string) => {
@@ -129,6 +140,7 @@ export const Home = () => {
                     <i />
                     <Button>词云</Button>
                     <Button onClick={getApplicationClicked}>好友申请</Button>
+                    <Button onClick={getContacts}>好友列表</Button>
                 </section>
             </section>
         </section>

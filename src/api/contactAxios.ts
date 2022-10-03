@@ -35,3 +35,8 @@ export const handleApplication = (contact: number, state: 1 | 2) => {
         },
     });
 }
+
+// 好友列表
+export const requestContactList = () => {
+    return myAxios(`/contact/list/${idGetter()}`);
+}
