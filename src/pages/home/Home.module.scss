@@ -19,6 +19,9 @@ $border: 1px solid black;
   // 左上部分
   >section:nth-of-type(1) {
     margin-bottom: 30px;
+    .person_info {
+      cursor: pointer;
+    }
   }
   // 联系人列表
   .list {
