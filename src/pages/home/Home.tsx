@@ -188,7 +188,12 @@ export const Home = () => {
                         name={contactProfile.name}
                         word={contactProfile.word}
                     />
-                    <div/>
+                    <div className={styles["dialogue"]}>
+                        {dialogue.map(item => <div>
+                            <span>{item.time}</span>
+                            <p>{item.word}</p>
+                        </div>)}
+                    </div>
                     <div className={styles["functional"]}>
                         <Button onClick={sendMsg}>发送</Button>
                     </div>
