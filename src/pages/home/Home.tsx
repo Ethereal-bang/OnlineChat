@@ -1,6 +1,6 @@
 import {Avatar, Button, Input, message, Popconfirm} from "antd";
 import React, {useEffect, useState} from "react";
-import {Contact, User} from "../../utils/interface";
+import {Contact, News, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
@@ -13,6 +13,7 @@ import {
 } from "../../api/contactAxios";
 import {contactStateMap} from "../../utils/map";
 import {Profile} from "../../views/profile/Profile";
+import {getDialogue} from "../../api/newsAxios";
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
@@ -32,6 +33,14 @@ export const Home = () => {
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [showListState, setShowList] = useState<boolean>(true);    // 决定左边列表显示内容(true消息/f联系人)
     const [showNewsState, setShowNewsState] = useState<boolean>(true);  // 右边板块显示消息内容还是个人信息修改
+    const [contactProfile, setContactProfile] = useState<User>({
+        id: 0,
+        name: "Loading",
+        avatar: "",
+        word: "",
+        password: "",
+    });   // 聊天时对方信息
+    const [dialogue, setDialogue] = useState<News[]>([]);
 
     // 请求用户信息
     useEffect(() => {
@@ -110,6 +119,14 @@ export const Home = () => {
         // sendNewsApi(939, "test6", "test6");
     }
 
+    // 请求与某人的对话列表
+    const showDialogue = async (contact: number) => {
+        const res = (await getDialogue(contact)).data.data;
+        setContactProfile(res.user);
+        setDialogue(res.list);
+        setShowNewsState(true);
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -123,7 +140,7 @@ export const Home = () => {
             </section>
             {/*联系人列表*/}
             <section className={styles["list"]}>
-                {contacts.map(item => <div key={item.id}>
+                {contacts.map(item => <div onClick={() => showDialogue(item.uid)} key={item.id}>
                     <Avatar size={50} src={item.avatar}/>
                     <div>
                         <h2>{item.name}</h2>
@@ -164,10 +181,13 @@ export const Home = () => {
         </section>
         {/*右边部分*/}
         <section className={styles["right"]}>
-            {/*(待改)对方信息*/}
-            <PersonBar avatar={avatar} name={name} word={word}/>
             {showNewsState
                 ? <section> {/*消息列表*/}
+                    <PersonBar
+                        avatar={contactProfile.avatar}
+                        name={contactProfile.name}
+                        word={contactProfile.word}
+                    />
                     <div/>
                     <div className={styles["functional"]}>
                         <Button onClick={sendMsg}>发送</Button>
