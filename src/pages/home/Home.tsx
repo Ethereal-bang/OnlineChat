@@ -13,7 +13,7 @@ import {
 } from "../../api/contactAxios";
 import {contactStateMap} from "../../utils/map";
 import {Profile} from "../../views/profile/Profile";
-import {getDialogue} from "../../api/newsAxios";
+import {getDialogue, sendNewsApi} from "../../api/newsAxios";
 import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
 
@@ -45,6 +45,7 @@ export const Home = () => {
         password: "",
     });   // 聊天时对方信息
     const [dialogue, setDialogue] = useState<News[]>([]);
+    const [inputVal, setInputVal] = useState<string>(""); // 打字内容
 
     // 请求用户信息
     useEffect(() => {
@@ -119,8 +120,19 @@ export const Home = () => {
     }
 
     // 发送消息
-    const sendMsg = () => {
-        // sendNewsApi(939, "test6", "test6");
+    const sendMsg = async () => {
+        const newsId: number = (await sendNewsApi(contactProfile.id, inputVal, inputVal)).data.data.id;
+        setInputVal('');    // 清空聊天框
+            const news: News = {
+                id: newsId,
+                sender: curId,
+                receiver: contactProfile.id,
+                content: inputVal,
+                word: inputVal,
+                time: "刚刚",
+            }
+            dialogue.unshift(news)
+
     }
 
     // 请求与某人的对话列表
@@ -212,6 +224,8 @@ export const Home = () => {
                         <Button onClick={sendMsg}>发送</Button>
                     </div>
                     <Input.TextArea
+                        value={inputVal}
+                        onChange={(e) => setInputVal(e.currentTarget.value)}
                         className={styles["input_msg"]}
                         rows={3}/>
                 </section>
