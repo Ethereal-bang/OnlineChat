@@ -14,6 +14,8 @@ import {
 import {contactStateMap} from "../../utils/map";
 import {Profile} from "../../views/profile/Profile";
 import {getDialogue} from "../../api/newsAxios";
+import emojiImg from "../../assets/emoji.png";
+import searchImg from "../../assets/search.png";
 
 const curId = idGetter();
 
@@ -201,6 +203,12 @@ export const Home = () => {
                         </div>)}
                     </div>
                     <div className={styles["functional"]}>
+                        <Button>
+                            <img src={emojiImg} alt={"emoji"} />
+                        </Button>
+                        <Button>
+                            <img src={searchImg} alt={"emoji"} />
+                        </Button>
                         <Button onClick={sendMsg}>发送</Button>
                     </div>
                     <Input.TextArea
