@@ -15,6 +15,8 @@ import {contactStateMap} from "../../utils/map";
 import {Profile} from "../../views/profile/Profile";
 import {getDialogue} from "../../api/newsAxios";
 
+const curId = idGetter();
+
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
     return <section className={styles["person_bar"]}>
@@ -189,9 +191,13 @@ export const Home = () => {
                         word={contactProfile.word}
                     />
                     <div className={styles["dialogue"]}>
-                        {dialogue.map(item => <div>
-                            <span>{item.time}</span>
-                            <p>{item.word}</p>
+                        {dialogue.map(item => <div key={item.id}
+                            className={styles["news_item"] + " " + styles[item.sender === curId ? "own_news" : "contact_news"]}
+                        >
+                            <div>
+                                <p>{item.word}</p>
+                                <span>{item.time.slice(-9)}</span>
+                            </div>
                         </div>)}
                     </div>
                     <div className={styles["functional"]}>

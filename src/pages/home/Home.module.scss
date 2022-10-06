@@ -17,12 +17,14 @@ $border: 1px solid black;
 .left {
   width: 30%;
   // 左上部分
-  >section:nth-of-type(1) {
+  > section:nth-of-type(1) {
     margin-bottom: 30px;
+
     .person_info {
       cursor: pointer;
     }
   }
+
   // 联系人列表
   .list {
     height: 60vh;
@@ -30,18 +32,20 @@ $border: 1px solid black;
     border: $border;
     position: relative;
     // 列表项
-    >div {
+    > div {
       height: 80px;
       padding: 9px;
       display: flex;
       justify-content: space-between;
       border-bottom: $border;
     }
+
     // bar
-    >section {
+    > section {
       width: 100%;
       position: absolute;
       bottom: 0;
+
       button {
         float: right;
       }
@@ -53,26 +57,39 @@ $border: 1px solid black;
   width: 50%;
   position: relative;
   border: $border;
+
   .person_bar {
     border-bottom: $border;
   }
+
   .dialogue {
+    height: 368px;
+    padding: 16px;
+    overflow-y: scroll;
+    transform: rotate(180deg);  // 整个聊天框旋转实现从下往上渲染
     // 单条消息
-    >div {
+    .news_item {
+      transform: rotate(180deg);  // 单条消息旋转显示回正常视角
       margin-top: 30px;
       // 消息内容
-      >p {
+      p {
         display: inline-block;
         border: $border;
       }
     }
+    // 本人消息
+    .own_news {
+      direction: rtl; // 使其从右边开始显示
+    }
   }
+
   .functional {
     height: 50px;
     position: absolute;
     bottom: 75px;
     border-bottom: $border;
   }
+
   .input_msg {
     height: 75px;
     position: absolute;
