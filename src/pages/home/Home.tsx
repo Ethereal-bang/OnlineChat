@@ -16,7 +16,7 @@ import {Profile} from "../../views/profile/Profile";
 import {getDialogue, sendNewsApi} from "../../api/newsAxios";
 import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
-import emojiRegex from "emoji-regex";
+import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
 
 const curId = idGetter();
 
@@ -122,18 +122,15 @@ export const Home = () => {
 
     // 发送消息
     const sendMsg = async () => {
-        const originalStr = inputVal;
-        // 将emoji换成emoji(code)的方式发给后端
-        const regex = emojiRegex(); // 匹配emoji的正则
-        const encodedStr = originalStr.replace(regex, p => `emoji(${p.codePointAt(0)})`);
+        const encodedStr = encodeEmoji(inputVal);
         const newsId: number = (await sendNewsApi(contactProfile.id, encodedStr, encodedStr)).data.data.id;
         setInputVal('');    // 清空聊天框
         const news: News = {
             id: newsId,
             sender: curId,
             receiver: contactProfile.id,
-            content: originalStr,
-            word: originalStr,
+            content: inputVal,
+            word: inputVal,
             time: "刚刚",
         }
         dialogue.unshift(news)
@@ -169,7 +166,7 @@ export const Home = () => {
                     <div>
                         <h2>{item.name}</h2>
                         {showListState /*显示消息或个性签名*/
-                            ? <p>{item.news}</p>
+                            ? <p>{decodeEmoji(item.news)}</p>
                             : <p>{item.word}</p>}
                     </div>
                     <div>
@@ -217,7 +214,7 @@ export const Home = () => {
                                                    className={styles["news_item"] + " " + styles[item.sender === curId ? "own_news" : "contact_news"]}
                         >
                             <div>
-                                <p>{item.word}</p>
+                                <p>{decodeEmoji(item.word)}</p>
                                 <span>{item.time.slice(-9)}</span>
                             </div>
                         </div>)}
