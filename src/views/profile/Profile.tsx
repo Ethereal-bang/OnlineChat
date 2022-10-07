@@ -6,6 +6,7 @@ import {getInfo, modifyProfile, uploadFile} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import {RcFile} from "antd/es/upload";
 import modifyIcon from "../../assets/modify.png";
+import ImgCrop from "antd-img-crop";
 
 export const Profile = () => {
     const [avatar, setAvatar] = useState<string>("");
@@ -46,9 +47,12 @@ export const Profile = () => {
 
     return <div className={styles["profile"]}>
         <div className={styles["avatar"]}>
-            <Upload beforeUpload={upload} className={styles["upload"]}>
-                <Avatar src={avatar} alt={"头像"} size={200} />
-            </Upload>
+            {/*上传前裁剪*/}
+            <ImgCrop shape={"round"}>
+                <Upload beforeUpload={upload} className={styles["upload"]}>
+                    <Avatar src={avatar} alt={"头像"} size={200} />
+                </Upload>
+            </ImgCrop>
             <img src={modifyIcon} alt={"icon"} />
         </div>
         <Input value={name}
