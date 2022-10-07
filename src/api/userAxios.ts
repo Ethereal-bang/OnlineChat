@@ -28,7 +28,7 @@ export const modifyProfile = (key: "name" | "word" | "avatar", val: string) => {
 export const uploadFile = (file: RcFile) => {
     const formData = new FormData();
     formData.append("file", file);
-    return myAxios.post("user/upload", formData, {
+    return myAxios.post("images/upload", formData, {
         headers: {
             "Content-Type": "multipart/form-data",
         }
