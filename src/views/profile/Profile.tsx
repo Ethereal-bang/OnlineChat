@@ -31,17 +31,16 @@ export const Profile = () => {
             : message.error(res.msg);
     }
 
-    // upload
-    const upload = (file: RcFile) => {
-        uploadFile(file).then(res => {
-            const data = res.data;
-            if (data.flag) {
-                message.success(data.msg);
-                setAvatar(data.data.path);
-            } else {
-                message.error(data.msg);
-            }
-        })
+    // upload and modify avatar
+    const modifyAvatar = async (file: RcFile) => {
+        const {flag, msg, data} = (await uploadFile(file)).data;
+        if (!flag) {
+            message.error(msg);
+        }
+        message.success(msg);
+        // 修改头像
+        setAvatar(data.path);
+        modifyProfile("avatar", data.path);
         return false;
     }
 
@@ -49,7 +48,7 @@ export const Profile = () => {
         <div className={styles["avatar"]}>
             {/*上传前裁剪*/}
             <ImgCrop shape={"round"}>
-                <Upload beforeUpload={upload} className={styles["upload"]}>
+                <Upload beforeUpload={modifyAvatar} className={styles["upload"]}>
                     <Avatar src={avatar} alt={"头像"} size={200} />
                 </Upload>
             </ImgCrop>
