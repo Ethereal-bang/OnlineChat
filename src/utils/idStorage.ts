@@ -1,7 +1,7 @@
 export const idGetter = (): number => {
-    return Number(localStorage.getItem("id"));
+    return Number(sessionStorage.getItem("id"));
 }
 
 export const idSetter = (id: number): void => {
-    localStorage.setItem("id", id + '');
+    sessionStorage.setItem("id", id + '');
 }
