@@ -171,7 +171,9 @@ export const Home = () => {
                     </div>
                     <div>
                         {showListState  /*显示已读或申请状态*/
-                            ? <i/>
+                            ? <span>
+                                {item.read ? "已读" : "未读"}
+                            </span>
                             : item.state === 4
                                 ? <Popconfirm
                                     title={"同意或拒绝好友申请"}
