@@ -22,3 +22,9 @@ export interface News {
     word: string,
     time: string,
 }
+
+export interface WsNews {
+    type: string,
+    message: string,
+    data: any,
+}

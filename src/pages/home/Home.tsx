@@ -17,8 +17,10 @@ import {getDialogue, sendNewsApi} from "../../api/newsAxios";
 import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
 import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
+import Websocket from "../../api/websocket";
 
 const curId = idGetter();
+const ws = Websocket.getInstance();
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
@@ -147,6 +149,19 @@ export const Home = () => {
     // 点击表情包界面
     const emojiFunc = () => {
     }
+
+    // ws添加收到消息回调
+    useEffect(() => {
+        const callback = (word: string, data: any) => {
+            getContacts();
+            return message.success(word);
+        };
+        ws.subscribe("news", callback);
+        // 组件卸载时取消订阅
+        return () => {
+            ws.off("news", callback);
+        };
+    }, [])
 
     return <section className={styles["home"]}>
         {/*左边部分*/}

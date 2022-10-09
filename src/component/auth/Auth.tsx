@@ -1,7 +1,7 @@
 import {idGetter} from "../../utils/idStorage";
 import {Navigate} from "react-router-dom";
 import {ReactNode} from "react";
-import websocket from "../../api/websocket";
+import Websocket from "../../api/websocket";
 
 interface Props {
     children: ReactNode,
@@ -10,8 +10,7 @@ interface Props {
 export default function Auth(props: Props) {
     // 已登录
     if (idGetter()) {
-        // 连接ws
-        websocket();
+        Websocket.getInstance();    // 连接ws
         return <>{props.children}</>
     }
     // 未登录
