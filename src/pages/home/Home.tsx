@@ -234,6 +234,7 @@ export const Home = () => {
                         value={inputVal}
                         onChange={(e) => setInputVal(e.currentTarget.value)}
                         className={styles["input_msg"]}
+                        onPressEnter={sendMsg}
                         rows={3}/>
                 </section>
                 : <section> {/*个人信息修改*/}
