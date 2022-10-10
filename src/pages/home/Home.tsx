@@ -154,6 +154,12 @@ export const Home = () => {
     useEffect(() => {
         const callback = (word: string, data: any) => {
             getContacts();
+            console.log(data, contactProfile)
+            if (contactProfile.id === data.id) {    // 如果是来自正在对话方发送
+                setDialogue(dialogue => {
+                    return [data.news, ...dialogue];
+                })
+            }
             return message.success(word);
         };
         ws.subscribe("news", callback);
@@ -161,7 +167,7 @@ export const Home = () => {
         return () => {
             ws.off("news", callback);
         };
-    }, [])
+    }, [contactProfile])
 
     return <section className={styles["home"]}>
         {/*左边部分*/}
@@ -228,7 +234,7 @@ export const Home = () => {
                     />
                     <div className={styles["dialogue"]}>
                         {dialogue.map(item => <div key={item.id}
-                                                   className={styles["news_item"] + " " + styles[item.sender === curId ? "own_news" : "contact_news"]}
+                                                   className={styles["news_item"] + " " + styles[item.sender === curId ? "own_news" : ""]}
                         >
                             <div>
                                 <p>{decodeEmoji(item.word)}</p>
