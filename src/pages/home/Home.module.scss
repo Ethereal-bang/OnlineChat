@@ -85,7 +85,10 @@ $home_height: 571px;
     }
     // 本人消息
     .own_news {
-      direction: rtl; // 使其从右边开始显示
+      direction: rtl; // 使其显示在聊天框右侧(在这里不是指文本方向
+      p {
+        direction: ltr; // 不设ltr继承rtl的话符号会显示在左边颠倒文本顺序
+      }
     }
   }
 
