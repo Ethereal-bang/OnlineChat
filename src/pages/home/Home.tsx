@@ -154,7 +154,6 @@ export const Home = () => {
     useEffect(() => {
         const callback = (word: string, data: any) => {
             getContacts();
-            console.log(data, contactProfile)
             if (contactProfile.id === data.id) {    // 如果是来自正在对话方发送
                 setDialogue(dialogue => {
                     return [data.news, ...dialogue];
@@ -168,6 +167,18 @@ export const Home = () => {
             ws.off("news", callback);
         };
     }, [contactProfile])
+
+    // ws好友申请回调
+    useEffect(() => {
+        const callback = (word: string) => {
+            getApplicationClicked();
+            return message.info(word);
+        }
+        ws.subscribe("application", callback);
+        return () => {
+            ws.off("application", callback);
+        }
+    }, [])
 
     return <section className={styles["home"]}>
         {/*左边部分*/}
