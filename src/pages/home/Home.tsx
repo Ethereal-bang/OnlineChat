@@ -5,7 +5,7 @@ import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
 import {
-    applyFriend, deleteContact,
+    applyFriend, blockContact, deleteContact,
     getApplicationList,
     handleApplication,
     requestContactList,
@@ -71,6 +71,13 @@ export const Home = () => {
             key: 2,
             name: "屏蔽联系人",
             onClick: (contact: number) => {
+                blockContact(contact).then(res => {
+                    const {flag, msg} = res.data;
+                    if (flag) {
+                        // ...更新UI
+                        return message.success(msg);
+                    }
+                })
             },
         }
     ];

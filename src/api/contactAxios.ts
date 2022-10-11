@@ -50,3 +50,14 @@ export const deleteContact = (contact: number) => {
         }
     })
 }
+
+// 屏蔽好友
+export const blockContact = (contact: number) => {
+    return myAxios("/contact/block", {
+        params: {
+            id: idGetter(),
+            contact,
+            state: 3,
+        },
+    });
+}
