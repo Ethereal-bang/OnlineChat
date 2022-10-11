@@ -40,3 +40,13 @@ export const handleApplication = (contact: number, state: 1 | 2) => {
 export const requestContactList = () => {
     return myAxios(`/contact/list/${idGetter()}`);
 }
+
+// 删除好友
+export const deleteContact = (contact: number) => {
+    return myAxios("/contact/delete", {
+        params: {
+            id: idGetter(),
+            contact,
+        }
+    })
+}

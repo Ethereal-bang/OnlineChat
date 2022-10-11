@@ -28,3 +28,14 @@ export interface WsNews {
     message: string,
     data: any,
 }
+
+export interface MenuOption {
+    key: number,
+    name: string,
+    onClick: (contact: number) => void,  // 点击后回调
+}
+
+export interface Position {
+    x: number,
+    y: number,
+}

@@ -1,11 +1,11 @@
 import {Avatar, Button, Input, message, Popconfirm} from "antd";
 import React, {useEffect, useState} from "react";
-import {Contact, News, User} from "../../utils/interface";
+import {Contact, MenuOption, News, Position, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
 import {
-    applyFriend,
+    applyFriend, deleteContact,
     getApplicationList,
     handleApplication,
     requestContactList,
@@ -18,6 +18,7 @@ import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
 import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
 import Websocket from "../../api/websocket";
+import {ContextMenu} from "../../component/contextMenu/ContextMenu";
 
 const curId = idGetter();
 const ws = Websocket.getInstance();
@@ -49,6 +50,30 @@ export const Home = () => {
     });   // 聊天时对方信息
     const [dialogue, setDialogue] = useState<News[]>([]);
     const [inputVal, setInputVal] = useState<string>(""); // 打字内容
+    const [contextMenuPos, setContextMenuPos] = useState<Position>({x: 0, y: 0});
+    const [contextMenuShow, setContextMenuShow] = useState<boolean>(false);
+    const [contactToMenu, setContactToMenu] = useState<number>(0);
+
+    const contextOptions: MenuOption[] = [
+        {
+            key: 1,
+            name: "删除联系人",
+            onClick: (contact: number) => {
+                deleteContact(contact).then(res => {
+                    const {flag, msg} = res.data;
+                    if (flag) {
+                        requestContactList();   // 重载联系人列表
+                        return message.success(msg);
+                    }
+                })
+            },
+        }, {
+            key: 2,
+            name: "屏蔽联系人",
+            onClick: (contact: number) => {
+            },
+        }
+    ];
 
     // 请求用户信息
     useEffect(() => {
@@ -180,6 +205,26 @@ export const Home = () => {
         }
     }, [])
 
+    // 点击关闭右键菜单
+    useEffect(() => {
+        const hideMenu = () => setContextMenuShow(false);
+        document.addEventListener("click", hideMenu);
+        return () => {
+            document.removeEventListener("click", hideMenu);
+        };
+    }, [])
+
+    const showContextMenu = (e: React.MouseEvent<HTMLDivElement>, uid: number) => {
+        e.preventDefault(); // 阻止默认的右键菜单
+        // 显示自定义右键菜单
+        setContextMenuPos({ // 相对浏览器可视区域左上角距离
+            x: e.clientX,
+            y: e.clientY,
+        })
+        setContextMenuShow(true);
+        setContactToMenu(uid);
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -193,7 +238,11 @@ export const Home = () => {
             </section>
             {/*联系人列表*/}
             <section className={styles["list"]}>
-                {contacts.map(item => <div onClick={() => showDialogue(item.uid)} key={item.id}>
+                {contacts.map(item => <div
+                    key={item.id}
+                    onClick={() => showDialogue(item.uid)}
+                    onContextMenu={e => showContextMenu(e, item.uid)}
+                >
                     <Avatar size={50} src={item.avatar}/>
                     <div>
                         <h2>{item.name}</h2>
@@ -274,5 +323,12 @@ export const Home = () => {
                 </section>
             }
         </section>
+        {/*上下文菜单*/}
+        <ContextMenu
+            options={contextOptions}
+            position={contextMenuPos}
+            isShow={contextMenuShow}
+            contact={contactToMenu}
+        />
     </section>
 }
