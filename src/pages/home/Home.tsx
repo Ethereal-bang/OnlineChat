@@ -53,6 +53,7 @@ export const Home = () => {
     const [contextMenuPos, setContextMenuPos] = useState<Position>({x: 0, y: 0});
     const [contextMenuShow, setContextMenuShow] = useState<boolean>(false);
     const [contactToMenu, setContactToMenu] = useState<number>(0);
+    const [emojisShow, setEmojisShow] = useState<boolean>(false);
 
     const contextOptions: MenuOption[] = [
         {
@@ -178,10 +179,6 @@ export const Home = () => {
         setShowNewsState(true);
     }
 
-    // 点击表情包界面
-    const emojiFunc = () => {
-    }
-
     // ws添加收到消息回调
     useEffect(() => {
         const callback = (word: string, data: any) => {
@@ -212,12 +209,15 @@ export const Home = () => {
         }
     }, [])
 
-    // 点击关闭右键菜单
+    // 点击关闭右键菜单/表情包界面
     useEffect(() => {
         const hideMenu = () => setContextMenuShow(false);
+        const hideEmojis = () => setEmojisShow(false);
         document.addEventListener("click", hideMenu);
+        document.addEventListener("click", hideEmojis);
         return () => {
             document.removeEventListener("click", hideMenu);
+            document.removeEventListener("click", hideEmojis);
         };
     }, [])
 
@@ -230,6 +230,10 @@ export const Home = () => {
         })
         setContextMenuShow(true);
         setContactToMenu(uid);
+    }
+
+    const onEmojiPick = (path: string) => {
+        console.log(path)
     }
 
     return <section className={styles["home"]}>
@@ -310,7 +314,7 @@ export const Home = () => {
                         </div>)}
                     </div>
                     <div className={styles["functional"]}>
-                        <Button onClick={emojiFunc}>
+                        <Button onClick={() => setEmojisShow(true)}>
                             <img src={emojiImg} alt={"emoji"}/>
                         </Button>
                         <Button>
@@ -330,7 +334,7 @@ export const Home = () => {
                 </section>
             }
             {/*表情包选取*/}
-            <Emojis />
+            <Emojis isShow={emojisShow} onClick={onEmojiPick} />
         </section>
         {/*上下文菜单*/}
         <ContextMenu

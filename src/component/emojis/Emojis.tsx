@@ -6,7 +6,17 @@ import {getEmojis, uploadEmoji} from "../../api/newsAxios";
 import ImgCrop from "antd-img-crop";
 import {useEffect, useState} from "react";
 
-export const Emojis = () => {
+interface Props {
+    isShow: boolean,
+    onClick: (path: string) => void,
+}
+
+export const Emojis = (props: Props) => {
+    const { isShow, onClick } = props;
+    const style = {
+        display: isShow ? "flex" : "none",
+    };
+
     const [emojis, setEmojis] = useState<string[]>();
 
     // 上传表情包
@@ -22,7 +32,10 @@ export const Emojis = () => {
         })
     }, [])
 
-    return <ul className={styles["container"]}>
+    return <ul
+        style={style}
+        className={styles["container"]}
+    >
         <li>
             <ImgCrop>
                 <Upload beforeUpload={upload} className={styles["upload"]}>
@@ -32,6 +45,7 @@ export const Emojis = () => {
         </li>
         {emojis?.map((path, index) => <li
             key={index}
+            onClick={() => onClick(path)}
         >
             <img src={path} alt={"emoji"} />
         </li>)}
