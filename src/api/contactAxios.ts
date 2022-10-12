@@ -61,3 +61,12 @@ export const blockContact = (contact: number) => {
         },
     });
 }
+
+// 亲密度排行
+export const closeRank = () => {
+    return myAxios("/contact/list/rank", {
+        params: {
+            id: idGetter(),
+        }
+    })
+}

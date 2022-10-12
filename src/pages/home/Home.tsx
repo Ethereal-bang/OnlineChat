@@ -5,7 +5,7 @@ import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
 import styles from "./Home.module.scss";
 import {
-    applyFriend, blockContact, deleteContact,
+    applyFriend, blockContact, closeRank, deleteContact,
     getApplicationList,
     handleApplication,
     requestContactList,
@@ -236,6 +236,12 @@ export const Home = () => {
         console.log(path)
     }
 
+    const rankClose = () => {
+        closeRank().then(res => {
+            setContacts(res.data.data.list);
+        })
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -291,6 +297,7 @@ export const Home = () => {
                     <Button>词云</Button>
                     <Button onClick={getApplicationClicked}>好友申请</Button>
                     <Button onClick={getContacts}>好友列表</Button>
+                    <Button onClick={rankClose}>亲密度排行</Button>
                 </section>
             </section>
         </section>
