@@ -18,7 +18,7 @@ import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
 import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
 import Websocket from "../../api/websocket";
-import {ContextMenu} from "../../component/contextMenu/ContextMenu";
+import {ContextMenu, Emojis} from "../../component";
 
 const curId = idGetter();
 const ws = Websocket.getInstance();
@@ -329,6 +329,8 @@ export const Home = () => {
                     <Profile/>
                 </section>
             }
+            {/*表情包选取*/}
+            <Emojis />
         </section>
         {/*上下文菜单*/}
         <ContextMenu
