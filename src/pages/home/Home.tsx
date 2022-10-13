@@ -168,7 +168,7 @@ export const Home = () => {
             word: inputVal,
             time: "刚刚",
         }
-        dialogue.unshift(news)
+        setDialogue(dialogue => [news, ...dialogue]);
     }
 
     // 请求与某人的对话列表
