@@ -76,7 +76,7 @@ $home_height: 571px;
       transform: rotate(180deg);  // 单条消息旋转显示回正常视角
       margin-bottom: 20px;
       // 消息内容
-      p {
+      div >div {
         display: inline-block;
         border: $border;
       }
@@ -113,7 +113,9 @@ $home_height: 571px;
   }
 
   .input_msg {
+    width: 100%;
     height: $input_msg_height;
+    overflow-y: hidden;
     position: absolute;
     bottom: 0;
   }

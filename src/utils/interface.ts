@@ -18,8 +18,7 @@ export interface News {
     id: number,
     sender: number,
     receiver: number,
-    content: string,    // 富文本
-    word: string,
+    content: string,    // html格式
     time: string,
 }
 

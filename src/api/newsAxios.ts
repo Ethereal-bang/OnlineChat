@@ -2,12 +2,11 @@ import {myAxios} from "./myAxios";
 import {idGetter} from "../utils/idStorage";
 import {RcFile} from "antd/es/upload";
 
-export const sendNewsApi = (receiver: number, content: string, word: string) => {
+export const sendNewsApi = (receiver: number, content: string) => {
     return myAxios.post("/news/send", {
         sender: idGetter(),
         receiver,
         content,
-        word,
     })
 }
 

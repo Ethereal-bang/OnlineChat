@@ -18,7 +18,7 @@ import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
 import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
 import Websocket from "../../api/websocket";
-import {ContextMenu, Emojis} from "../../component";
+import {ContextMenu, Editor, Emojis} from "../../component";
 
 const curId = idGetter();
 const ws = Websocket.getInstance();
@@ -158,14 +158,13 @@ export const Home = () => {
     // 发送消息
     const sendMsg = async () => {
         const encodedStr = encodeEmoji(inputVal);
-        const newsId: number = (await sendNewsApi(contactProfile.id, encodedStr, encodedStr)).data.data.id;
+        const newsId: number = (await sendNewsApi(contactProfile.id, encodedStr)).data.data.id;
         setInputVal('');    // 清空聊天框
         const news: News = {
             id: newsId,
             sender: curId,
             receiver: contactProfile.id,
             content: inputVal,
-            word: inputVal,
             time: "刚刚",
         }
         setDialogue(dialogue => [news, ...dialogue]);
@@ -264,7 +263,10 @@ export const Home = () => {
                     <div>
                         <h2>{item.name}</h2>
                         {showListState /*显示消息或个性签名*/
-                            ? <p>{decodeEmoji(item.news)}</p>
+                            ? <div
+                                dangerouslySetInnerHTML={{
+                                    __html: decodeEmoji(item.news)
+                                }} />
                             : <p>{item.word}</p>}
                     </div>
                     <div>
@@ -315,7 +317,7 @@ export const Home = () => {
                                                    className={styles["news_item"] + " " + styles[item.sender === curId ? "own_news" : ""]}
                         >
                             <div>
-                                <p>{decodeEmoji(item.word)}</p>
+                                <div dangerouslySetInnerHTML={{__html: decodeEmoji(item.content)}} />
                                 <span>{item.time.slice(-9)}</span>
                             </div>
                         </div>)}
@@ -329,12 +331,12 @@ export const Home = () => {
                         </Button>
                         <Button onClick={sendMsg}>发送</Button>
                     </div>
-                    <Input.TextArea
-                        value={inputVal}
-                        onChange={(e) => setInputVal(e.currentTarget.value)}
-                        className={styles["input_msg"]}
-                        onPressEnter={sendMsg}
-                        rows={3}/>
+                    <div className={styles["input_msg"]}>
+                        <Editor
+                            val={inputVal}
+                            onChange={val => setInputVal(val)}
+                        />
+                    </div>
                 </section>
                 : <section> {/*个人信息修改*/}
                     <Profile/>
