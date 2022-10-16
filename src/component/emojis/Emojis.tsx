@@ -17,11 +17,12 @@ export const Emojis = (props: Props) => {
         display: isShow ? "flex" : "none",
     };
 
-    const [emojis, setEmojis] = useState<string[]>();
+    const [emojis, setEmojis] = useState<string[]>([]);
 
     // 上传表情包
     const upload = async (file: RcFile) => {
-        await uploadEmoji(file)
+        const path = (await uploadEmoji(file)).data.data.path;
+        setEmojis(arr => [...arr, path]);
         return false;
     }
 
@@ -43,7 +44,7 @@ export const Emojis = (props: Props) => {
                 </Upload>
             </ImgCrop>
         </li>
-        {emojis?.map((path, index) => <li
+        {emojis.map((path, index) => <li
             key={index}
             onClick={() => onClick(path)}
         >

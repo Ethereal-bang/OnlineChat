@@ -167,7 +167,6 @@ export const Home = () => {
             content: inputVal,
             time: "刚刚",
         }
-        setEmojisShow(false);
         setDialogue(dialogue => [news, ...dialogue]);
     }
 
@@ -239,6 +238,7 @@ export const Home = () => {
             content,
             time: "刚刚",
         }
+        setEmojisShow(false);
         setDialogue(dialogue => [news, ...dialogue]);
     }
 
