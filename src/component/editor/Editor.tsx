@@ -13,7 +13,7 @@ export const Editor = (props: Props) => {
         toolbar: {
             container: [
                 [{ size: ["small", false, "large"] }],  // 字号
-                ["bold", "underline", "italic", "image"],
+                ["bold", "underline", "italic"],
                 [{ color: ['rgb(  0,   0,   0)', 'rgb(230,   0,   0)', 'rgb(255, 153,   0)',
                         'rgb(255, 255,   0)', 'rgb(  0, 138,   0)', 'rgb(  0, 102, 204)',
                         'rgb(153,  51, 255)', 'rgb(255, 255, 255)', 'rgb(250, 204, 204)',
@@ -27,11 +27,6 @@ export const Editor = (props: Props) => {
                         'rgb(102,  61,   0)', 'rgb(102, 102,   0)', 'rgb(  0,  55,   0)',
                         'rgb(  0,  41, 102)', 'rgb( 61,  20,  10)'] }],
             ],
-            handlers: {
-                // image: (v: any) => {    // 点击图片后调用(bug:导致不能显示
-                //     console.log(v)
-                // }
-            }
         },
     }
 

@@ -208,15 +208,12 @@ export const Home = () => {
         }
     }, [])
 
-    // 点击关闭右键菜单/表情包界面
+    // 点击关闭右键菜单
     useEffect(() => {
         const hideMenu = () => setContextMenuShow(false);
-        const hideEmojis = () => setEmojisShow(false);
         document.addEventListener("click", hideMenu);
-        document.addEventListener("click", hideEmojis);
         return () => {
             document.removeEventListener("click", hideMenu);
-            document.removeEventListener("click", hideEmojis);
         };
     }, [])
 
@@ -231,8 +228,17 @@ export const Home = () => {
         setContactToMenu(uid);
     }
 
-    const onEmojiPick = (path: string) => {
-        console.log(path)
+    const onEmojiPick = async (path: string) => {
+        const content = `<img src="${path}" alt="png" />`
+        const newsId: number = (await sendNewsApi(contactProfile.id, content)).data.data.id;
+        const news: News = {
+            id: newsId,
+            sender: curId,
+            receiver: contactProfile.id,
+            content,
+            time: "刚刚",
+        }
+        setDialogue(dialogue => [news, ...dialogue]);
     }
 
     const rankClose = () => {
@@ -323,7 +329,7 @@ export const Home = () => {
                         </div>)}
                     </div>
                     <div className={styles["functional"]}>
-                        <Button onClick={() => setEmojisShow(true)}>
+                        <Button onClick={() => setEmojisShow(bool => !bool)}>
                             <img src={emojiImg} alt={"emoji"}/>
                         </Button>
                         <Button>
