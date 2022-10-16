@@ -79,6 +79,15 @@ $home_height: 571px;
       div >div {
         display: inline-block;
         border: $border;
+        // 表情包类型
+        >img {
+          width: 100px;
+          height: 100px;
+        }
+        // 富文本包裹标签
+        >p {
+          margin: 0;
+        }
       }
     }
     // 本人消息

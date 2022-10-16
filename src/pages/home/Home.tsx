@@ -167,6 +167,7 @@ export const Home = () => {
             content: inputVal,
             time: "刚刚",
         }
+        setEmojisShow(false);
         setDialogue(dialogue => [news, ...dialogue]);
     }
 
@@ -271,7 +272,10 @@ export const Home = () => {
                         {showListState /*显示消息或个性签名*/
                             ? <div
                                 dangerouslySetInnerHTML={{
-                                    __html: decodeEmoji(item.news)
+                                    __html:
+                                        item.news.match(/<img/)
+                                            ? "图片消息"
+                                            : decodeEmoji(item.news)
                                 }} />
                             : <p>{item.word}</p>}
                     </div>
