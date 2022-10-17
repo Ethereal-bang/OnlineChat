@@ -2,15 +2,23 @@ import {idGetter} from "../utils/idStorage";
 import {WsNews} from "../utils/interface";
 
 export default class Websocket {
-    private ws: WebSocket;
+    private ws: WebSocket | undefined;
     private eventCenter: EventCenter = new EventCenter();
     static instance: Websocket;    // 单例模式
 
     constructor() {
+        this.create();
+    }
+
+    // 连接
+    create() {
         this.ws = new WebSocket(`ws://localhost:8080/websocket/${idGetter()}`);
         this.ws.onmessage = (event) => {
             const data: WsNews = JSON.parse(event.data);    // 解析为JSON
             this.eventCenter.emit(data.type, data.message, data.data);  // 发往消息中心
+        }
+        this.ws.onclose = () => {
+            this.create();
         }
     }
 
