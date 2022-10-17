@@ -199,7 +199,7 @@ export const Home = () => {
     // ws好友申请回调
     useEffect(() => {
         const callback = (word: string) => {
-            getApplicationClicked();
+            getContacts();
             return message.info(word);
         }
         ws.subscribe("application", callback);
@@ -273,7 +273,7 @@ export const Home = () => {
                             ? <div
                                 dangerouslySetInnerHTML={{
                                     __html:
-                                        item.news.match(/<img/)
+                                        item.news?.match(/<img/)
                                             ? "图片消息"
                                             : decodeEmoji(item.news)
                                 }} />
