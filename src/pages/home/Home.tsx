@@ -61,7 +61,7 @@ export const Home = () => {
                 deleteContact(contact).then(res => {
                     const {flag, msg} = res.data;
                     if (flag) {
-                        requestContactList();   // 重载联系人列表
+                        getContacts();   // 重载联系人列表
                         return message.success(msg);
                     }
                 })
