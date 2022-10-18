@@ -19,6 +19,7 @@ import searchImg from "../../assets/search.png";
 import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
 import Websocket from "../../api/websocket";
 import {ContextMenu, Editor, Emojis} from "../../component";
+import {decodeHtml} from "../../utils/decodeHtml";
 
 const curId = idGetter();
 const ws = Websocket.getInstance();
@@ -271,7 +272,7 @@ export const Home = () => {
                     onContextMenu={e => showContextMenu(e, item.uid)}
                 >
                     <Avatar size={50} src={item.avatar}/>
-                    <div>
+                    <div className={styles["list_mid"]}>
                         <h2>{item.name}</h2>
                         {showListState /*显示消息或个性签名*/
                             ? <div
@@ -279,7 +280,7 @@ export const Home = () => {
                                     __html:
                                         item.news?.match(/<img/)
                                             ? "图片消息"
-                                            : decodeEmoji(item.news)
+                                            : decodeEmoji(decodeHtml(item.news))
                                 }} />
                             : <p>{item.word}</p>}
                     </div>
@@ -309,8 +310,6 @@ export const Home = () => {
                 </div>)}
                 {/*多功能bar*/}
                 <section>
-                    <i/>
-                    <Button>词云</Button>
                     <Button onClick={getApplicationClicked}>好友申请</Button>
                     <Button onClick={getContacts}>好友列表</Button>
                     <Button onClick={rankClose}>亲密度排行</Button>

@@ -1,4 +1,5 @@
 @import "src/utils/variable";
+
 $border: 1px solid black;
 $home_height: 571px;
 
@@ -41,6 +42,21 @@ $home_height: 571px;
       display: flex;
       justify-content: space-between;
       border-bottom: $border;
+      // 中间部分
+      .list_mid {
+        width: 70%;
+        margin: 0 10px;
+        text-align: left;
+        // 消息内容
+        div {
+          width: 260px;
+          height: 20px;
+          margin: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
     }
 
     // bar
@@ -70,26 +86,28 @@ $home_height: 571px;
     padding: 0;
     margin-bottom: $functional_height + $input_msg_height;
     overflow-y: scroll;
-    transform: rotate(180deg);  // 整个聊天框旋转实现从下往上渲染
+    transform: rotate(180deg); // 整个聊天框旋转实现从下往上渲染
     // 单条消息
     .news_item {
-      transform: rotate(180deg);  // 单条消息旋转显示回正常视角
+      transform: rotate(180deg); // 单条消息旋转显示回正常视角
       margin-bottom: 20px;
       // 消息内容
-      div >div {
+      div > div {
         display: inline-block;
         border: $border;
         // 表情包类型
-        >img {
+        > img {
           width: 100px;
           height: 100px;
         }
+
         // 富文本包裹标签
-        >p {
+        > p {
           margin: 0;
         }
       }
     }
+
     // 本人消息
     .own_news {
       direction: rtl; // 使其显示在聊天框右侧(在这里不是指文本方向
@@ -105,15 +123,18 @@ $home_height: 571px;
     position: absolute;
     bottom: $input_msg_height;
     border: $border;
+
     button {
       height: 34px;
       padding: 0;
       text-align: center;
       min-width: 54px;
+
       img {
         height: 18px;
       }
     }
+
     // 发送键
     button:nth-of-type(3) {
       float: right;
