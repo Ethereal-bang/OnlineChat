@@ -253,6 +253,20 @@ export const Home = () => {
         })
     }
 
+    // 对方已读ws回调
+    useEffect(() => {
+        const cb = (msg: string, data: any) => {
+            const contact: number = data.id;
+            setContacts(list => {
+                const cur = list.filter(item => item.uid === contact)[0]
+                cur.read = true;
+                return [cur, ...list.filter(item => item.uid !== contact)];
+            })
+        }
+        ws.subscribe("read", cb);
+        return () => ws.off("read", cb);
+    }, [])
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
