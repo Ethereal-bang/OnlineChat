@@ -174,8 +174,9 @@ export const Home = () => {
     }
 
     // 请求与某人的对话列表
-    const showDialogue = async (contact: number) => {
-        const res = (await getDialogue(contact)).data.data;
+    const showDialogue = async (contact: Contact) => {
+        if (contact.state !== 1 && contact.state !== 3) return; // 除了已同意和已屏蔽
+        const res = (await getDialogue(contact.uid)).data.data;
         setContactProfile(res.user);
         setDialogue(res.list);
         setShowNewsState(true);
@@ -266,7 +267,7 @@ export const Home = () => {
             <section className={styles["list"]}>
                 {contacts.map(item => <div
                     key={item.id}
-                    onClick={() => showDialogue(item.uid)}
+                    onClick={() => showDialogue(item)}
                     onContextMenu={e => showContextMenu(e, item.uid)}
                 >
                     <Avatar size={50} src={item.avatar}/>
