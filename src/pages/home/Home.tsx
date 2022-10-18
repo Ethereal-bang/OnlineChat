@@ -84,13 +84,16 @@ export const Home = () => {
     ];
 
     // 请求用户信息
-    useEffect(() => {
+    const getOwnInfo = () => {
         getInfo(idGetter()).then(res => {
             const user: User = res.data.data.user;
             setAvatar(user.avatar);
             setName(user.name);
             setWord(user.word);
         })
+    }
+    useEffect(() => {
+        getOwnInfo();
     }, [])
 
     // 请求消息列表
@@ -349,7 +352,7 @@ export const Home = () => {
                     </div>
                 </section>
                 : <section> {/*个人信息修改*/}
-                    <Profile/>
+                    <Profile update={getOwnInfo} />
                 </section>
             }
             {/*表情包选取*/}

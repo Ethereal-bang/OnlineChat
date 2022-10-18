@@ -8,7 +8,11 @@ import {RcFile} from "antd/es/upload";
 import modifyIcon from "../../assets/modify.png";
 import ImgCrop from "antd-img-crop";
 
-export const Profile = () => {
+interface Props {
+    update: () => void,
+}
+
+export const Profile = (props: Props) => {
     const [avatar, setAvatar] = useState<string>("");
     const [name, setName] = useState<string>("Loading");
     const [word, setWord] = useState<string>("");
@@ -29,6 +33,7 @@ export const Profile = () => {
         res.flag
             ? message.success(res.msg)
             : message.error(res.msg);
+        res.flag && props.update(); // 成功后更新页面
     }
 
     // upload and modify avatar
@@ -41,6 +46,7 @@ export const Profile = () => {
         // 修改头像
         setAvatar(data.path);
         modifyProfile("avatar", data.path);
+        props.update(); // 更新主页显示信息
         return false;
     }
 
