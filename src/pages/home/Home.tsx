@@ -52,6 +52,7 @@ export const Home = () => {
     const [contextMenuShow, setContextMenuShow] = useState<boolean>(false);
     const [contactToMenu, setContactToMenu] = useState<number>(0);
     const [emojisShow, setEmojisShow] = useState<boolean>(false);
+    const [showScore, setShowScore] = useState<boolean>(false);
 
     const contextOptions: MenuOption[] = [
         {
@@ -101,6 +102,7 @@ export const Home = () => {
     const getContacts = async () => {
         setContacts((await requestContactList()).data.data.list);
         setShowList(true);
+        setShowScore(false);
     }
     useEffect(() => {
         getContacts();
@@ -248,6 +250,8 @@ export const Home = () => {
     }
 
     const rankClose = () => {
+        setShowScore(true);
+        setShowList(true);
         closeRank().then(res => {
             setContacts(res.data.data.list);
         })
@@ -301,7 +305,10 @@ export const Home = () => {
                     <div>
                         {showListState  /*显示已读或申请状态*/
                             ? <span>
-                                {item.read ? "已读" : "未读"}
+                                {showScore
+                                    ? item.score
+                                    : item.read ? "已读" : "未读"
+                                }
                             </span>
                             : item.state === 4
                                 ? <Popconfirm
