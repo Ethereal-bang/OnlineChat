@@ -21,9 +21,6 @@ import Websocket from "../../api/websocket";
 import {ContextMenu, Editor, Emojis} from "../../component";
 import {decodeHtml} from "../../utils/decodeHtml";
 
-const curId = idGetter();
-const ws = Websocket.getInstance();
-
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
     return <section className={styles["person_bar"]}>
@@ -83,6 +80,9 @@ export const Home = () => {
             },
         }
     ];
+
+    const ws = Websocket.getInstance();
+    const curId = idGetter();
 
     // 请求用户信息
     const getOwnInfo = () => {
@@ -199,7 +199,7 @@ export const Home = () => {
         return () => {
             ws.off("news", callback);
         };
-    }, [contactProfile])
+    }, [contactProfile, ws])
 
     // ws好友申请回调
     useEffect(() => {
@@ -211,7 +211,7 @@ export const Home = () => {
         return () => {
             ws.off("application", callback);
         }
-    }, [])
+    }, [ws])
 
     // 点击关闭右键菜单
     useEffect(() => {
@@ -265,7 +265,7 @@ export const Home = () => {
         }
         ws.subscribe("read", cb);
         return () => ws.off("read", cb);
-    }, [])
+    }, [ws])
 
     return <section className={styles["home"]}>
         {/*左边部分*/}
