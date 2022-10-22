@@ -10,7 +10,6 @@ interface Props {
 export function Auth(props: Props) {
     // 已登录
     if (idGetter()) {
-        console.log("connect")
         Websocket.getInstance();    // 连接ws
         return <>{props.children}</>
     }
