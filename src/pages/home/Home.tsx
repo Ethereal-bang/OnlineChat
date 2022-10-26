@@ -1,5 +1,5 @@
 import {Avatar, Button, Input, message, Popconfirm} from "antd";
-import React, {useEffect, useState} from "react";
+import React, {BaseSyntheticEvent, useEffect, useRef, useState} from "react";
 import {Contact, MenuOption, News, Position, User} from "../../utils/interface";
 import {getInfo} from "../../api/userAxios";
 import {idGetter} from "../../utils/idStorage";
@@ -53,6 +53,9 @@ export const Home = () => {
     const [contactToMenu, setContactToMenu] = useState<number>(0);
     const [emojisShow, setEmojisShow] = useState<boolean>(false);
     const [showScore, setShowScore] = useState<boolean>(false);
+    const [page, setPage] = useState<number>(1);    // 聊天记录请求页数
+
+    const dialogueRef = useRef(null);
 
     const contextOptions: MenuOption[] = [
         {
@@ -271,6 +274,41 @@ export const Home = () => {
         return () => ws.off("read", cb);
     }, [ws])
 
+    // 切换聊天联系人后 重置加载页数+滚动条位置
+    useEffect(() => {
+        setPage(1);
+        // ...重置滚动位置
+        if (dialogueRef) {
+            // @ts-ignore
+            dialogueRef.current.scrollTop = 0;
+        }
+    }, [contactProfile, dialogueRef])
+
+    // 节流
+    const throttle = (fn: Function, time: number, ...args: any) => {
+        let flag = false;   // 标志是否已触发（节流
+        return () => {
+            if (flag) return;
+            fn(...args);
+            flag = true;
+            setTimeout(() => flag = false, time);
+        }
+    }
+
+    // 对话框滚动到顶部后加载下一页记录
+    const lazyLoadNews = (e: BaseSyntheticEvent) => {
+        const height = e.currentTarget.scrollHeight - e.currentTarget.clientHeight;
+        if (height - e.currentTarget.scrollTop < 25) {
+            (throttle(async () => {
+                const list = (await getDialogue(contactProfile.id, page + 1)).data.data.list;
+                setDialogue(d => {
+                    return [...d, ...list];
+                })
+                setPage(p => p + 1);
+            }, 2000,))()
+        }
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -299,7 +337,7 @@ export const Home = () => {
                                         item.news?.match(/<img/)
                                             ? "图片消息"
                                             : decodeEmoji(decodeHtml(item.news))
-                                }} />
+                                }}/>
                             : <p>{item.word}</p>}
                     </div>
                     <div>
@@ -346,12 +384,15 @@ export const Home = () => {
                         name={contactProfile.name}
                         word={contactProfile.word}
                     />
-                    <div className={styles["dialogue"]}>
+                    <div className={styles["dialogue"]}
+                         onScroll={lazyLoadNews}
+                         ref={dialogueRef}
+                    >
                         {dialogue.map(item => <div key={item.id}
                                                    className={styles["news_item"] + " " + styles[item.sender === curId ? "own_news" : ""]}
                         >
                             <div>
-                                <div dangerouslySetInnerHTML={{__html: decodeEmoji(item.content)}} />
+                                <div dangerouslySetInnerHTML={{__html: decodeEmoji(item.content)}}/>
                                 <span>{item.time.slice(-9)}</span>
                             </div>
                         </div>)}
@@ -373,11 +414,11 @@ export const Home = () => {
                     </div>
                 </section>
                 : <section> {/*个人信息修改*/}
-                    <Profile update={getOwnInfo} />
+                    <Profile update={getOwnInfo}/>
                 </section>
             }
             {/*表情包选取*/}
-            <Emojis isShow={emojisShow} onClick={onEmojiPick} />
+            <Emojis isShow={emojisShow} onClick={onEmojiPick}/>
         </section>
         {/*上下文菜单*/}
         <ContextMenu

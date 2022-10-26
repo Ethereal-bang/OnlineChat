@@ -11,8 +11,8 @@ export const sendNewsApi = (receiver: number, content: string) => {
 }
 
 // 与某人的全部对话
-export const getDialogue = (contact: number) => {
-    return myAxios("/news/getDialogue", {
+export const getDialogue = (contact: number, page: number = 1) => {
+    return myAxios(`/news/getDialogue/${page}`, {
         params: {
             id: idGetter(),
             contact,
