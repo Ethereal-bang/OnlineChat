@@ -19,7 +19,7 @@ export default class Websocket {
 
     // 连接
     create() {
-        this.ws = new WebSocket(`ws://localhost:8080/websocket/${idGetter()}`);
+        this.ws = new WebSocket(`ws://onlinechatapi.giantcat.top:25639/websocket/${idGetter()}`);
         this.ws.onmessage = (event) => {
             const data: WsNews = JSON.parse(event.data);    // 解析为JSON
             if (data.message === "pong") {// 收到消息重置心跳
