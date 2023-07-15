@@ -14,7 +14,7 @@
     "antd-img-crop": "^4.2.5",
     "axios": "^0.27.2",
     "emoji-regex": "^10.2.1",
-    "node-sass": "^7.0.3",
+    "node-sass": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
