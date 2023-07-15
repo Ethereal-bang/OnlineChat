@@ -22,7 +22,7 @@ export const getDialogue = (contact: number, page: number = 1) => {
 
 // 上传表情包
 export const uploadEmoji = (file: RcFile) => {
-    const url = `images/uploadEmoji/${idGetter()}`
+    const url = `files/uploadEmoji/${idGetter()}`
     const formData = new FormData();
     formData.append("file", file);
     return myAxios.post(url, formData, {
@@ -34,5 +34,5 @@ export const uploadEmoji = (file: RcFile) => {
 
 // 获取用户表情包
 export const getEmojis = () => {
-    return myAxios(`/images/emoji/${idGetter()}`);
+    return myAxios(`/files/emoji/${idGetter()}`);
 }
