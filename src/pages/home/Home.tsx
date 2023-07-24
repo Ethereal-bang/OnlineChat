@@ -13,13 +13,14 @@ import {
 } from "../../api/contactAxios";
 import {contactStateMap} from "../../utils/map";
 import {Profile} from "../../views/profile/Profile";
-import {getDialogue, sendNewsApi} from "../../api/newsAxios";
+import {getDialogue, mergeFile, sendFile, sendNewsApi} from "../../api/newsAxios";
 import emojiImg from "../../assets/emoji.png";
 import searchImg from "../../assets/search.png";
 import {decodeEmoji, encodeEmoji} from "../../utils/emojiHandle";
 import Websocket from "../../api/websocket";
 import {ContextMenu, Editor, Emojis} from "../../component";
 import {decodeHtml} from "../../utils/decodeHtml";
+import { calculateChunksHash, createFileChunks } from "../../utils/handleFile";
 
 const PersonBar = (props: Pick<User, "name" | "avatar" | "word">) => {
 
@@ -56,6 +57,7 @@ export const Home = () => {
     const [page, setPage] = useState<number>(1);    // 聊天记录请求页数
 
     const dialogueRef = useRef(null);
+    const fileInputRef = useRef<HTMLInputElement>(null!);
 
     const contextOptions: MenuOption[] = [
         {
@@ -309,6 +311,35 @@ export const Home = () => {
         }
     }
 
+    // 上传文件
+    const uploadFile = async () => {
+        if (!contactProfile.id) return; // 没有选择联系人
+        if (!fileInputRef.current.files) return; // 没有选择文件
+        const file = fileInputRef.current.files[0];
+        const chunks = createFileChunks(file, 1024 * 1024 * 2);
+        const filehash = await calculateChunksHash(chunks);
+        const requestList = chunks
+            .map((chunk, index) => {
+                return {
+                    chunk,
+                    hash: filehash + "-" + index, // 文件hash + 当前块索引
+                }
+            })
+            .map(({chunk, hash}) => {
+                const formData = new FormData();
+                formData.append("file", chunk);
+                formData.append("hash", hash);
+                formData.append("filehash", filehash);  // 一个是文件hash 一个是文件块hash
+                return formData;
+            })
+            .map(formData => {
+                return sendFile(formData, contactProfile.id);
+            })
+        const res = await Promise.all(requestList);
+        console.log(res);
+        await mergeFile(filehash, file.name);
+    }
+
     return <section className={styles["home"]}>
         {/*左边部分*/}
         <section className={styles["left"]}>
@@ -404,6 +435,7 @@ export const Home = () => {
                         <Button>
                             <img src={searchImg} alt={"search"}/>
                         </Button>
+                        <input ref={fileInputRef} type="file" onChange={uploadFile} /> {/*文件上传*/}
                         <Button onClick={sendMsg}>发送</Button>
                     </div>
                     <div className={styles["input_msg"]}>

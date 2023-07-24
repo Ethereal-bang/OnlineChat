@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "public/hash.ts", "public/js/hash copy.js"  ]
 }
